@@ -7,16 +7,16 @@ This repository currently contains one browser application. A monorepo or backen
 ## Dependency direction
 
 ```text
-app -> features -> domain
- |         |          |
- +---------+----------+-> shared
+app -> components -> rendering
+          |
+          +-----------> domain
 ```
 
 `domain` is the core of the product. It should model machines, validate definitions, execute input, and produce trace data without importing React or browser APIs.
 
-`features` turns domain capabilities into workflows such as building a machine, stepping through a simulation, and running a test suite.
+`components` contains the React interface and may coordinate domain behavior. `rendering` contains browser drawing operations that do not depend on React.
 
-`app` owns composition concerns such as routing and global providers. `shared` contains generic code that has no automata-specific business behavior.
+`app` owns composition concerns such as routing and global providers. Cross-cutting source files are organized by responsibility in top-level directories such as `styles` and `tests`.
 
 ## Initial quality gates
 

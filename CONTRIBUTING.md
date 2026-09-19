@@ -9,6 +9,6 @@ npm run check
 npm run build
 ```
 
-Keep pure machine models and algorithms in `src/domain`. UI workflows belong in `src/features`, while application-wide composition belongs in `src/app`.
+Keep pure machine models and algorithms in `src/domain`. React UI belongs in `src/components`, browser drawing operations belong in `src/rendering`, and application-wide composition belongs in `src/app`.
 
-Add tests beside the code they cover using `*.test.ts` or `*.test.tsx`. Reserve `tests/e2e` for complete browser workflows.
+Add unit and component tests to `src/tests` using `*.test.ts` or `*.test.tsx`. Reserve root-level `tests/e2e` for complete browser workflows.

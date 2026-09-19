@@ -1,7 +1,10 @@
+/** Boots the React application and attaches it to the document root. */
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
 import { App } from '@/app/App'
+import '@/styles/global.css'
 
 const root = document.querySelector('#root')
 

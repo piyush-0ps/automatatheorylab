@@ -1,11 +1,15 @@
 # Source architecture
 
-The application uses feature-oriented boundaries:
+The application uses global responsibility-based directories:
 
 - `app/` composes the application, routes, and global providers.
+- `components/` contains React components from every application area.
 - `domain/` contains framework-independent automata models and algorithms.
-- `features/` contains user-facing capabilities. A feature may use `domain` and `shared`, but features should not depend directly on one another.
-- `shared/` contains reusable UI, utilities, constants, and cross-cutting types with no feature-specific behavior.
-- `test/` contains test setup and reusable test helpers.
+- `rendering/` contains browser rendering operations that are independent of React.
+- `styles/` contains global and component-specific stylesheets.
+- `tests/` contains unit tests, component tests, and shared test setup.
 
-Keep automata execution rules in `domain/`, not inside React components. This allows DFA, NFA, PDA, and Turing machine behavior to be tested without rendering the UI.
+New functionality should be placed in the matching global directory instead of
+creating the same directory structure inside each feature. Keep automata
+execution rules in `domain/`, not inside React components, so machine behavior
+can be tested without rendering the UI.

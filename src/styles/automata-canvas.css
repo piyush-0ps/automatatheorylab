@@ -1,0 +1,8 @@
+/** Defines the visible bounds and background of the automata workspace. */
+
+.automata-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #f8fafc;
+}
