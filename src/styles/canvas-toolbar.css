@@ -1,0 +1,92 @@
+/** Styles the compact action toolbar overlaid at the canvas bottom center. */
+
+.canvas-toolbar {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  width: 348px;
+  max-width: calc(100% - 32px);
+  height: 31px;
+  background: #f8f8f8;
+  border: 1px solid #d4d4d4;
+  transform: translateX(-50%);
+}
+
+.canvas-toolbar__button {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  padding: 0 6px;
+  color: #222222;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  place-items: center;
+}
+
+.canvas-toolbar__icon {
+  width: 19px;
+  height: 19px;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.canvas-toolbar__state-label {
+  fill: currentColor;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  stroke: none;
+}
+
+.canvas-toolbar__button:hover {
+  background: #eeeeee;
+}
+
+.canvas-toolbar__button[aria-pressed='true'] {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.canvas-toolbar__button::after {
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  z-index: 2;
+  padding: 4px 6px;
+  color: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1;
+  white-space: nowrap;
+  visibility: hidden;
+  content: attr(data-tooltip);
+  background: #222222;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition:
+    opacity 100ms ease,
+    visibility 0s linear 100ms;
+}
+
+.canvas-toolbar__button:hover::after {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 1s;
+}
+
+.canvas-toolbar__button:focus-visible::after {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+.canvas-toolbar__button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
