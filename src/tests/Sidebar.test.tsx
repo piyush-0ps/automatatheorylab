@@ -7,7 +7,20 @@ import { describe, expect, it, vi } from 'vitest'
 import { Sidebar } from '@/components/Sidebar'
 
 describe('Sidebar', () => {
-  it('starts expanded and toggles through the native summary control', async () => {
+  it('renders the referenced machine list and panel toggle', () => {
+    render(<Sidebar />)
+
+    expect(screen.getByText('Machines')).toBeInTheDocument()
+    expect(screen.getByText('DFA')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Add DFA machine' }),
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText('Toggle sidebar')).toContainElement(
+      document.querySelector('.sidebar__toggle-icon'),
+    )
+  })
+
+  it('starts expanded and toggles through the native panel control', async () => {
     const user = userEvent.setup()
     const { container } = render(<Sidebar />)
     const disclosure = container.querySelector('details')

@@ -1,5 +1,5 @@
 /**
- * Provides the application's empty, collapsible sidebar.
+ * Provides the application's collapsible machine sidebar.
  *
  * Expansion is delegated to the native HTML details disclosure element, so
  * the component does not require custom toggle behavior. A dedicated separator
@@ -11,7 +11,7 @@ import type { CSSProperties, KeyboardEvent, PointerEvent } from 'react'
 
 import '@/styles/sidebar.css'
 
-const DEFAULT_SIDEBAR_WIDTH_PX = 240
+const DEFAULT_SIDEBAR_WIDTH_PX = 204
 const MINIMUM_SIDEBAR_WIDTH_PX = 160
 const MAXIMUM_VIEWPORT_WIDTH_RATIO = 0.5
 const KEYBOARD_RESIZE_STEP_PX = 16
@@ -52,17 +52,17 @@ function constrainSidebarWidth(
 }
 
 /**
- * Renders an empty sidebar that supports disclosure and edge resizing.
+ * Renders the machine sidebar with disclosure and edge resizing.
  *
  * The component accepts no parameters because its initial state and dimensions
  * are currently fixed. Activating the summary element toggles the parent
  * details element's native `open` attribute. When expanded, the separator can
  * be grabbed anywhere along the sidebar's right edge and dragged horizontally.
  * Pointer capture keeps resizing active when the pointer leaves the handle.
- * The empty aside and resize handle are automatically hidden while collapsed.
+ * The machine list and resize handle are automatically hidden while collapsed.
  *
- * @returns A native disclosure containing an accessible empty sidebar and
- * resize separator.
+ * @returns A native disclosure containing the machine list, panel toggle, and
+ * accessible resize separator.
  *
  * @example
  * ```tsx
@@ -174,8 +174,34 @@ export function Sidebar() {
         aria-label="Toggle sidebar"
         className="sidebar__toggle"
         title="Toggle sidebar"
-      />
-      <aside aria-label="Sidebar" className="sidebar__content" />
+      >
+        <svg
+          aria-hidden="true"
+          className="sidebar__toggle-icon"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <rect height="18" rx="2" width="18" x="3" y="3" />
+          <path d="M9 3v18" />
+        </svg>
+      </summary>
+      <aside aria-label="Sidebar" className="sidebar__content">
+        <section aria-labelledby="machines-heading">
+          <h2 className="sidebar__heading" id="machines-heading">
+            Machines
+          </h2>
+          <div className="sidebar__machine-row">
+            <span>DFA</span>
+            <button
+              aria-label="Add DFA machine"
+              className="sidebar__add-machine"
+              type="button"
+            >
+              +
+            </button>
+          </div>
+        </section>
+      </aside>
       <div
         aria-label="Resize sidebar"
         aria-orientation="vertical"
