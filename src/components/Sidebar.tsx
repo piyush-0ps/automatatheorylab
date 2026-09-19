@@ -9,6 +9,7 @@
 import { useRef, useState } from 'react'
 import type { CSSProperties, KeyboardEvent, PointerEvent } from 'react'
 
+import { MachineList } from '@/components/MachineList'
 import '@/styles/sidebar.css'
 
 const DEFAULT_SIDEBAR_WIDTH_PX = 204
@@ -186,21 +187,7 @@ export function Sidebar() {
         </svg>
       </summary>
       <aside aria-label="Sidebar" className="sidebar__content">
-        <section aria-labelledby="machines-heading">
-          <h2 className="sidebar__heading" id="machines-heading">
-            Machines
-          </h2>
-          <div className="sidebar__machine-row">
-            <span>DFA</span>
-            <button
-              aria-label="Add DFA machine"
-              className="sidebar__add-machine"
-              type="button"
-            >
-              +
-            </button>
-          </div>
-        </section>
+        <MachineList />
       </aside>
       <div
         aria-label="Resize sidebar"

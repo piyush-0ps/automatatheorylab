@@ -61,45 +61,6 @@
   padding: 6px 10px 0;
 }
 
-.sidebar__heading {
-  margin: 0;
-  color: #4a4a4a;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 10px;
-}
-
-.sidebar__machine-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 16px;
-}
-
-.sidebar__add-machine {
-  display: grid;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  color: #111111;
-  font: inherit;
-  font-size: 17px;
-  font-weight: 400;
-  line-height: 1;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-  place-items: center;
-}
-
-.sidebar__add-machine:focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 1px;
-}
-
 .sidebar__resize-handle {
   position: absolute;
   top: 0;
