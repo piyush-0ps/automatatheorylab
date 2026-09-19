@@ -7,27 +7,35 @@
 
 import { useEffect, useRef } from 'react'
 
+import type { Machine } from '@/domain/Machine'
 import { renderCanvasGrid } from '@/rendering/renderCanvasGrid'
 import '@/styles/automata-canvas.css'
+
+interface AutomataCanvasProps {
+  machine?: Machine | null
+}
 
 /**
  * Renders a responsive native canvas with no surrounding interface.
  *
- * The component accepts no parameters because the current workspace has no
- * configuration. On mount, it obtains the two-dimensional rendering context,
+ * On mount, the component obtains the two-dimensional rendering context,
  * paints the initial grid, and observes the canvas for layout changes. The
  * observer is disconnected during unmount to avoid retaining DOM references.
+ * When supplied, the machine identity is exposed on the native canvas so future
+ * drawing operations can resolve the correct automaton.
  *
+ * @param props - Optional machine associated with the rendered workspace.
+ * @param props.machine - The active machine, or `null` when no tab is active.
  * @returns A single accessible HTML canvas that fills its parent.
  *
  * @example
  * ```tsx
  * export function Workspace() {
- *   return <AutomataCanvas />
+ *   return <AutomataCanvas machine={activeMachine} />
  * }
  * ```
  */
-export function AutomataCanvas() {
+export function AutomataCanvas({ machine = null }: AutomataCanvasProps) {
   const canvasReference = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -66,8 +74,9 @@ export function AutomataCanvas() {
 
   return (
     <canvas
-      aria-label="Automata workspace"
+      aria-label={machine ? `${machine.name} canvas` : 'Automata workspace'}
       className="automata-canvas"
+      data-machine-id={machine?.id}
       ref={canvasReference}
     >
       Your browser does not support the automata canvas.

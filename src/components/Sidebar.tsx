@@ -10,6 +10,7 @@ import { useRef, useState } from 'react'
 import type { CSSProperties, KeyboardEvent, PointerEvent } from 'react'
 
 import { MachineList } from '@/components/MachineList'
+import type { Machine } from '@/domain/Machine'
 import '@/styles/sidebar.css'
 
 const DEFAULT_SIDEBAR_WIDTH_PX = 204
@@ -19,6 +20,14 @@ const KEYBOARD_RESIZE_STEP_PX = 16
 
 interface SidebarStyle extends CSSProperties {
   '--sidebar-width': string
+}
+
+interface SidebarProps {
+  activeMachineId: number | null
+  machines: readonly Machine[]
+  onCreateMachine: (name: string) => void
+  onOpenMachine: (machineId: number) => void
+  onRemoveMachine: (machineId: number) => void
 }
 
 /**
@@ -55,25 +64,42 @@ function constrainSidebarWidth(
 /**
  * Renders the machine sidebar with disclosure and edge resizing.
  *
- * The component accepts no parameters because its initial state and dimensions
- * are currently fixed. Activating the summary element toggles the parent
- * details element's native `open` attribute. When expanded, the separator can
- * be grabbed anywhere along the sidebar's right edge and dragged horizontally.
- * Pointer capture keeps resizing active when the pointer leaves the handle.
- * The machine list and resize handle are automatically hidden while collapsed.
+ * Activating the summary element toggles the parent details element's native
+ * `open` attribute. When expanded, the separator can be grabbed anywhere along
+ * the sidebar's right edge and dragged horizontally. Pointer capture keeps
+ * resizing active when the pointer leaves the handle. Machine operations are
+ * forwarded to the machine list while workspace state remains owned by the app.
  *
+ * @param props - Machine workspace data and operations rendered in the sidebar.
+ * @param props.activeMachineId - Identifier associated with the visible canvas.
+ * @param props.machines - Machines currently available in the DFA list.
+ * @param props.onCreateMachine - Creates a machine with the submitted name.
+ * @param props.onOpenMachine - Opens or activates a machine canvas.
+ * @param props.onRemoveMachine - Removes a machine and any matching tab.
  * @returns A native disclosure containing the machine list, panel toggle, and
  * accessible resize separator.
  *
  * @example
  * ```tsx
  * <main>
- *   <Sidebar />
+ *   <Sidebar
+ *     activeMachineId={activeMachine?.id ?? null}
+ *     machines={machines}
+ *     onCreateMachine={createMachine}
+ *     onOpenMachine={openMachine}
+ *     onRemoveMachine={removeMachine}
+ *   />
  *   <Workspace />
  * </main>
  * ```
  */
-export function Sidebar() {
+export function Sidebar({
+  activeMachineId,
+  machines,
+  onCreateMachine,
+  onOpenMachine,
+  onRemoveMachine,
+}: SidebarProps) {
   const sidebarReference = useRef<HTMLDetailsElement>(null)
   const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH_PX)
   const sidebarStyle: SidebarStyle = {
@@ -187,7 +213,13 @@ export function Sidebar() {
         </svg>
       </summary>
       <aside aria-label="Sidebar" className="sidebar__content">
-        <MachineList />
+        <MachineList
+          activeMachineId={activeMachineId}
+          machines={machines}
+          onCreateMachine={onCreateMachine}
+          onOpenMachine={onOpenMachine}
+          onRemoveMachine={onRemoveMachine}
+        />
       </aside>
       <div
         aria-label="Resize sidebar"

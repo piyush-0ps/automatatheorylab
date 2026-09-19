@@ -8,13 +8,14 @@ This repository currently contains one browser application. A monorepo or backen
 
 ```text
 app -> components -> rendering
-          |
+ |        |
+ +------> hooks ------> domain
           +-----------> domain
 ```
 
 `domain` is the core of the product. It should model machines, validate definitions, execute input, and produce trace data without importing React or browser APIs.
 
-`components` contains the React interface and may coordinate domain behavior. `rendering` contains browser drawing operations that do not depend on React.
+`components` contains the React interface. `hooks` coordinates reusable interface state and workflows using domain types. `rendering` contains browser drawing operations that do not depend on React.
 
 `app` owns composition concerns such as routing and global providers. Cross-cutting source files are organized by responsibility in top-level directories such as `styles` and `tests`.
 

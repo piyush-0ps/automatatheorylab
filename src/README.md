@@ -5,6 +5,7 @@ The application uses global responsibility-based directories:
 - `app/` composes the application, routes, and global providers.
 - `components/` contains React components from every application area.
 - `domain/` contains framework-independent automata models and algorithms.
+- `hooks/` coordinates reusable React state and application workflows.
 - `rendering/` contains browser rendering operations that are independent of React.
 - `styles/` contains global and component-specific stylesheets.
 - `tests/` contains unit tests, component tests, and shared test setup.

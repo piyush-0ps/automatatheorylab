@@ -6,9 +6,22 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { Sidebar } from '@/components/Sidebar'
 
+/** Renders the sidebar with an empty controlled machine workspace. */
+function renderSidebar() {
+  return render(
+    <Sidebar
+      activeMachineId={null}
+      machines={[]}
+      onCreateMachine={vi.fn()}
+      onOpenMachine={vi.fn()}
+      onRemoveMachine={vi.fn()}
+    />,
+  )
+}
+
 describe('Sidebar', () => {
   it('renders the referenced machine list and panel toggle', () => {
-    render(<Sidebar />)
+    renderSidebar()
 
     expect(screen.getByText('Machines')).toBeInTheDocument()
     expect(screen.getByText('DFA')).toBeInTheDocument()
@@ -22,7 +35,7 @@ describe('Sidebar', () => {
 
   it('starts expanded and toggles through the native panel control', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Sidebar />)
+    const { container } = renderSidebar()
     const disclosure = container.querySelector('details')
     const toggle = screen.getByLabelText('Toggle sidebar')
 
@@ -36,7 +49,7 @@ describe('Sidebar', () => {
   })
 
   it('resizes by dragging anywhere along the right-edge separator', () => {
-    const { container } = render(<Sidebar />)
+    const { container } = renderSidebar()
     const disclosure = container.querySelector('details')
     const resizeHandle = screen.getByRole('separator', {
       name: 'Resize sidebar',

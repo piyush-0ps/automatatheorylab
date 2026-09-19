@@ -1,0 +1,85 @@
+/** Styles open machine tabs using a compact IDE-like presentation. */
+
+.canvas-tab-bar {
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  height: 32px;
+  overflow-x: auto;
+  background: #ececec;
+  border-bottom: 1px solid #c8c8c8;
+}
+
+.canvas-tab-bar__item {
+  position: relative;
+  display: flex;
+  min-width: 96px;
+  max-width: 180px;
+  overflow: hidden;
+  color: #444444;
+  background: #e5e5e5;
+  border-right: 1px solid #c8c8c8;
+}
+
+.canvas-tab-bar__item:hover,
+.canvas-tab-bar__item:focus-within {
+  background: #dddddd;
+}
+
+.canvas-tab-bar__item[data-active='true'] {
+  color: #111111;
+  background: #f8fafc;
+}
+
+.canvas-tab-bar__item[data-active='true']::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  content: '';
+  background: #2563eb;
+}
+
+.canvas-tab-bar__tab {
+  flex: 1;
+  min-width: 0;
+  padding: 0 6px 0 14px;
+  overflow: hidden;
+  color: inherit;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.canvas-tab-bar__close {
+  display: grid;
+  flex: 0 0 26px;
+  padding: 0;
+  color: inherit;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  opacity: 0;
+  place-items: center;
+}
+
+.canvas-tab-bar__item:hover .canvas-tab-bar__close,
+.canvas-tab-bar__item:focus-within .canvas-tab-bar__close {
+  opacity: 1;
+}
+
+.canvas-tab-bar__tab:focus-visible,
+.canvas-tab-bar__close:focus-visible {
+  z-index: 1;
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}

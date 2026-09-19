@@ -76,6 +76,31 @@
   background: #e5e5e5;
 }
 
+.machine-list__item[data-active='true'] {
+  background: #dbeafe;
+}
+
+.machine-list__name-button {
+  align-self: stretch;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.machine-list__name-button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
 .machine-list__remove-button {
   display: grid;
   width: 20px;
