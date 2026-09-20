@@ -4,5 +4,18 @@
   display: block;
   width: 100%;
   height: 100%;
+  touch-action: none;
   background: #f8fafc;
+}
+
+.automata-canvas[data-tool='state'] {
+  cursor: crosshair;
+}
+
+.automata-canvas[data-state-interaction='hovering'] {
+  cursor: grab;
+}
+
+.automata-canvas[data-state-interaction='dragging'] {
+  cursor: grabbing;
 }

@@ -6,7 +6,10 @@
  * the user-facing name remains editable presentation data.
  */
 
+import type { AutomataState } from '@/domain/AutomataState'
+
 export interface Machine {
   readonly id: number
   readonly name: string
+  readonly states: readonly AutomataState[]
 }

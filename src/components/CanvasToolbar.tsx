@@ -1,24 +1,30 @@
 /**
  * Provides the canvas action toolbar displayed above the workspace edge.
  *
- * The toolbar tracks the currently selected button for visual and accessible
- * feedback. Canvas-editing behavior will be connected when the corresponding
- * workflows are implemented.
+ * The toolbar reports selections to its workspace owner and reflects the
+ * controlled active tool for visual and accessible feedback.
  */
 
-import { useState } from 'react'
 import type { MouseEvent } from 'react'
 
+import type { CanvasTool } from '@/types/CanvasTool'
 import '@/styles/canvas-toolbar.css'
+
+interface CanvasToolbarProps {
+  onSelectAction: (action: CanvasTool) => void
+  selectedAction: CanvasTool | null
+}
 
 /**
  * Renders the currently available canvas action placeholders as symbols.
  *
- * The component accepts no parameters. Clicking a button marks it as the sole
- * selected action, but does not yet modify the canvas. Visible labels are
- * replaced by icons while accessible labels and hover tooltips describe every
- * action.
+ * Clicking a button delegates selection to the workspace owner. Visible labels
+ * are replaced by icons while accessible labels and hover tooltips describe
+ * every action.
  *
+ * @param props - Controlled selection state and the selection callback.
+ * @param props.onSelectAction - Called with the tool represented by a click.
+ * @param props.selectedAction - The tool currently highlighted by the workspace.
  * @returns A labeled toolbar containing State, Transition, Console, Redo, and
  * Undo buttons.
  *
@@ -26,28 +32,31 @@ import '@/styles/canvas-toolbar.css'
  * ```tsx
  * <section className="canvas-workspace">
  *   <AutomataCanvas />
- *   <CanvasToolbar />
+ *   <CanvasToolbar
+ *     onSelectAction={setSelectedTool}
+ *     selectedAction={selectedTool}
+ *   />
  * </section>
  * ```
  */
-export function CanvasToolbar() {
-  const [selectedAction, setSelectedAction] = useState<string | null>(null)
-
+export function CanvasToolbar({
+  onSelectAction,
+  selectedAction,
+}: CanvasToolbarProps) {
   /**
    * Marks the clicked toolbar button as the current selection.
    *
    * Button names are defined by this component and provide stable identifiers
-   * without coupling selection state to the visible SVG markup. Selecting an
-   * action currently changes presentation only; canvas behavior will be added
-   * separately.
+   * without coupling selection state to the visible SVG markup. The authored
+   * button names are constrained to the shared `CanvasTool` union.
    *
    * @param event - The React mouse event emitted by a canvas toolbar button.
-   * @returns Nothing. The selected action state is updated as a side effect.
+   * @returns Nothing. Selection is delegated to the workspace owner.
    */
   const handleActionSelection = (
     event: MouseEvent<HTMLButtonElement>,
   ): void => {
-    setSelectedAction(event.currentTarget.name)
+    onSelectAction(event.currentTarget.name as CanvasTool)
   }
 
   return (

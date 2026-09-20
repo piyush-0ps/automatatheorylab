@@ -1,10 +1,13 @@
 /** Composes the root application layout from global UI components. */
 
+import { useState } from 'react'
+
 import { AutomataCanvas } from '@/components/AutomataCanvas'
 import { CanvasTabBar } from '@/components/CanvasTabBar'
 import { CanvasToolbar } from '@/components/CanvasToolbar'
 import { Sidebar } from '@/components/Sidebar'
 import { useMachineWorkspace } from '@/hooks/useMachineWorkspace'
+import type { CanvasTool } from '@/types/CanvasTool'
 import '@/styles/app.css'
 
 /**
@@ -25,6 +28,8 @@ import '@/styles/app.css'
  */
 export function App() {
   const machineWorkspace = useMachineWorkspace()
+  const [selectedCanvasTool, setSelectedCanvasTool] =
+    useState<CanvasTool | null>(null)
 
   return (
     <main className="app-layout">
@@ -42,8 +47,16 @@ export function App() {
           onCloseMachine={machineWorkspace.closeMachineTab}
           onSelectMachine={machineWorkspace.openMachine}
         />
-        <AutomataCanvas machine={machineWorkspace.activeMachine} />
-        <CanvasToolbar />
+        <AutomataCanvas
+          activeTool={selectedCanvasTool}
+          machine={machineWorkspace.activeMachine}
+          onAddState={machineWorkspace.addState}
+          onMoveState={machineWorkspace.moveState}
+        />
+        <CanvasToolbar
+          onSelectAction={setSelectedCanvasTool}
+          selectedAction={selectedCanvasTool}
+        />
       </section>
     </main>
   )

@@ -1,6 +1,6 @@
 /** Verifies sidebar machines, workspace tabs, and canvas association together. */
 
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -47,10 +47,17 @@ describe('machine workspace', () => {
       'aria-selected',
       'true',
     )
-    expect(screen.getByLabelText('Second machine canvas')).toHaveAttribute(
-      'data-machine-id',
-      '1',
-    )
+    const secondMachineCanvas = screen.getByLabelText('Second machine canvas')
+    expect(secondMachineCanvas).toHaveAttribute('data-machine-id', '1')
+
+    await user.click(screen.getByRole('button', { name: 'Add state' }))
+    fireEvent.pointerDown(secondMachineCanvas, {
+      button: 0,
+      clientX: 120,
+      clientY: 160,
+      pointerId: 1,
+    })
+    expect(secondMachineCanvas).toHaveAttribute('data-state-count', '1')
 
     await user.click(screen.getByRole('tab', { name: 'First machine' }))
 
@@ -60,6 +67,10 @@ describe('machine workspace', () => {
     )
     expect(screen.getByLabelText('First machine canvas')).toHaveAttribute(
       'data-machine-id',
+      '0',
+    )
+    expect(screen.getByLabelText('First machine canvas')).toHaveAttribute(
+      'data-state-count',
       '0',
     )
 
@@ -79,6 +90,10 @@ describe('machine workspace', () => {
     )
     expect(screen.getByLabelText('Second machine canvas')).toHaveAttribute(
       'data-machine-id',
+      '1',
+    )
+    expect(screen.getByLabelText('Second machine canvas')).toHaveAttribute(
+      'data-state-count',
       '1',
     )
   })

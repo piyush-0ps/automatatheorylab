@@ -7,6 +7,7 @@
 
 import { useMemo, useReducer, useRef } from 'react'
 
+import type { StatePosition } from '@/domain/AutomataState'
 import type { Machine } from '@/domain/Machine'
 
 interface MachineWorkspaceState {
@@ -16,8 +17,15 @@ interface MachineWorkspaceState {
 }
 
 type MachineWorkspaceAction =
+  | { type: 'add-state'; machineId: number; position: StatePosition }
   | { type: 'create'; machine: Machine }
   | { type: 'close'; machineId: number }
+  | {
+      type: 'move-state'
+      machineId: number
+      stateId: number
+      position: StatePosition
+    }
   | { type: 'open'; machineId: number }
   | { type: 'remove'; machineId: number }
 
@@ -25,8 +33,14 @@ export interface MachineWorkspace {
   readonly machines: readonly Machine[]
   readonly openMachines: readonly Machine[]
   readonly activeMachine: Machine | null
+  addState: (machineId: number, position: StatePosition) => void
   closeMachineTab: (machineId: number) => void
   createMachine: (name: string) => void
+  moveState: (
+    machineId: number,
+    stateId: number,
+    position: StatePosition,
+  ) => void
   openMachine: (machineId: number) => void
   removeMachine: (machineId: number) => void
 }
@@ -54,6 +68,32 @@ function machineWorkspaceReducer(
   state: MachineWorkspaceState,
   action: MachineWorkspaceAction,
 ): MachineWorkspaceState {
+  if (action.type === 'add-state') {
+    const targetMachine = state.machines.find(
+      (machine) => machine.id === action.machineId,
+    )
+
+    if (!targetMachine) {
+      return state
+    }
+
+    const stateId = targetMachine.states.length
+    const nextAutomataState = {
+      id: stateId,
+      name: `q${stateId}`,
+      ...action.position,
+    }
+
+    return {
+      ...state,
+      machines: state.machines.map((machine) =>
+        machine.id === action.machineId
+          ? { ...machine, states: [...machine.states, nextAutomataState] }
+          : machine,
+      ),
+    }
+  }
+
   if (action.type === 'create') {
     return {
       ...state,
@@ -78,6 +118,35 @@ function machineWorkspaceReducer(
         ? state.openMachineIds
         : [...state.openMachineIds, action.machineId],
       activeMachineId: action.machineId,
+    }
+  }
+
+  if (action.type === 'move-state') {
+    const targetMachine = state.machines.find(
+      (machine) => machine.id === action.machineId,
+    )
+    const stateExists = targetMachine?.states.some(
+      (automataState) => automataState.id === action.stateId,
+    )
+
+    if (!stateExists) {
+      return state
+    }
+
+    return {
+      ...state,
+      machines: state.machines.map((machine) =>
+        machine.id === action.machineId
+          ? {
+              ...machine,
+              states: machine.states.map((automataState) =>
+                automataState.id === action.stateId
+                  ? { ...automataState, ...action.position }
+                  : automataState,
+              ),
+            }
+          : machine,
+      ),
     }
   }
 
@@ -169,7 +238,7 @@ export function useMachineWorkspace(): MachineWorkspace {
    * @returns Nothing. Workspace state is updated through the reducer.
    */
   const createMachine = (name: string): void => {
-    const machine: Machine = { id: nextMachineId.current, name }
+    const machine: Machine = { id: nextMachineId.current, name, states: [] }
     nextMachineId.current += 1
     dispatch({ type: 'create', machine })
   }
@@ -195,6 +264,36 @@ export function useMachineWorkspace(): MachineWorkspace {
   }
 
   /**
+   * Adds the next sequentially named state to a specific machine.
+   *
+   * State positions use canvas CSS pixels, allowing rendering to remain stable
+   * across different device pixel ratios.
+   *
+   * @param machineId - Identifier of the machine receiving the new state.
+   * @param position - State center relative to the canvas display bounds.
+   * @returns Nothing. Workspace state is updated through the reducer.
+   */
+  const addState = (machineId: number, position: StatePosition): void => {
+    dispatch({ type: 'add-state', machineId, position })
+  }
+
+  /**
+   * Moves an existing state to a new position within its machine canvas.
+   *
+   * @param machineId - Identifier of the machine that owns the state.
+   * @param stateId - Stable identifier of the state being dragged.
+   * @param position - New state center in canvas CSS pixels.
+   * @returns Nothing. Workspace state is updated through the reducer.
+   */
+  const moveState = (
+    machineId: number,
+    stateId: number,
+    position: StatePosition,
+  ): void => {
+    dispatch({ type: 'move-state', machineId, stateId, position })
+  }
+
+  /**
    * Removes a machine, its open tab, and its active association when present.
    *
    * @param machineId - The stable identifier of the machine to remove.
@@ -208,8 +307,10 @@ export function useMachineWorkspace(): MachineWorkspace {
     machines: state.machines,
     openMachines,
     activeMachine,
+    addState,
     closeMachineTab,
     createMachine,
+    moveState,
     openMachine,
     removeMachine,
   }
